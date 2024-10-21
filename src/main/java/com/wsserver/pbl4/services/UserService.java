@@ -39,4 +39,12 @@ public class UserService {
     public List<User> findConnectedUsers() {
         return repository.findByStatus(Status.ONLINE);
     }
+
+    public List<User> findByFullname(String fullname) {
+        return repository.findByFullname(fullname);
+    }
+
+    public List<User> findByEmail(String email) {
+        return repository.findByEmail(email);
+    }
 }

@@ -2,8 +2,10 @@ package com.wsserver.pbl4.models;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,17 +13,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @Document
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class PrivateChatMessage {
     @Id
-    private String uid;
-    private String fullname;
-    private String email;
-    private Status status;
-
-    @Override
-    public String toString() {
-        return "User [email=" + email + ", fullname=" + fullname + ", status=" + status + ", uid=" + uid + "]";
-    }
+    private String id;
+    private String chatRoomId;
+    private String senderId;
+    private String receiverId;
+    private String content;
+    private Date timestamp;
 }

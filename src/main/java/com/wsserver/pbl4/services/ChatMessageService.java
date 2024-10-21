@@ -16,18 +16,15 @@ public class ChatMessageService {
     // private final ChatRoomService chatRoomService;
 
     public ChatMessage saveMessage(ChatMessage message) {
-        // String chatRoomId = chatRoomService.getChatRoomId(message.getSenderId(), message.getReceiverId(), true)
-        //         .orElseThrow(
-        //                 () -> new RuntimeException("Chat room not found"));
-        // message.setChatRoomId(chatRoomId);
         repository.save(message);
         return message;
     }
 
     public List<ChatMessage> getMessages(String chatRoomId) {
-        // String chatRoomId = chatRoomService.getChatRoomId(senderId, receiverId, false).orElse(null);
-                // .orElseThrow(
-                //         () -> new RuntimeException("Chat room not found"));
+        // String chatRoomId = chatRoomService.getChatRoomId(senderId, receiverId,
+        // false).orElse(null);
+        // .orElseThrow(
+        // () -> new RuntimeException("Chat room not found"));
         return repository.findByChatRoomId(chatRoomId).orElse(null);
     }
 }

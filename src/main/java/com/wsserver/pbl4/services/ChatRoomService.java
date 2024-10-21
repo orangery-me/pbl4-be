@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import com.wsserver.pbl4.models.ChatRoom;
 import com.wsserver.pbl4.repositories.ChatRoomRepository;
 import java.util.*;
-import java.util.Arrays;
 
 import lombok.RequiredArgsConstructor;
 
@@ -13,11 +12,14 @@ import lombok.RequiredArgsConstructor;
 public class ChatRoomService {
     private final ChatRoomRepository repository;
 
-    public String createChatRoom(String roomName, String roomOwnerId) {
+    public String createChatRoom(String roomName, String roomOwnerId, List<String> otherMembersId) {
+        List<String> membersId = new ArrayList<>(otherMembersId);
+        membersId.add(roomOwnerId);
+
         ChatRoom chatRoom = ChatRoom.builder()
                 .roomName(roomName)
                 .roomOwnerId(roomOwnerId)
-                .membersId(new ArrayList<>(Arrays.asList(roomOwnerId)))
+                .membersId(membersId)
                 .build();
         repository.save(chatRoom);
         return chatRoom.getId();

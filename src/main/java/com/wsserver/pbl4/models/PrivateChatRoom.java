@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,15 +14,11 @@ import lombok.Setter;
 @Document
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+@Builder
+public class PrivateChatRoom {
     @Id
-    private String uid;
-    private String fullname;
-    private String email;
-    private Status status;
-
-    @Override
-    public String toString() {
-        return "User [email=" + email + ", fullname=" + fullname + ", status=" + status + ", uid=" + uid + "]";
-    }
+    private String id;
+    private String roomName;
+    private String user1Id;
+    private String user2Id;
 }

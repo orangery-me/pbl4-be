@@ -15,6 +15,7 @@ import com.wsserver.pbl4.models.User;
 import com.wsserver.pbl4.services.UserService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
@@ -44,4 +45,13 @@ public class UserController {
         return ResponseEntity.ok(userService.findConnectedUsers());
     }
 
+    @GetMapping("/findByFullname")
+    public ResponseEntity<List<User>> getMethodName(@RequestParam("name") String name) {
+        return ResponseEntity.ok(userService.findByFullname(name));
+    }
+
+    @GetMapping("/findByEmail")
+    public ResponseEntity<List<User>> getUserByEmail(@RequestParam("email") String email) {
+        return ResponseEntity.ok(userService.findByEmail(email));
+    }
 }

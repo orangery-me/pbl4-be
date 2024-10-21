@@ -9,4 +9,8 @@ import com.wsserver.pbl4.models.User;
 
 public interface UserRepository extends MongoRepository<User, String> {
     public List<User> findByStatus(Status status);
+
+    public List<User> findByFullname(String fullname);
+
+    public List<User> findByEmail(String email);
 }
