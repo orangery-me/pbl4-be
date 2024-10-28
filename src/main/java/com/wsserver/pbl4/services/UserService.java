@@ -1,7 +1,6 @@
 package com.wsserver.pbl4.services;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,5 +45,10 @@ public class UserService {
 
     public List<User> findByEmail(String email) {
         return repository.findByEmail(email);
+    }
+
+    public User findById(String id) {
+        User user = repository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        return user;
     }
 }

@@ -13,7 +13,7 @@ public class ChatRoomService {
     private final ChatRoomRepository repository;
 
     public String createChatRoom(String roomName, String roomOwnerId, List<String> otherMembersId) {
-        List<String> membersId = new ArrayList<>(otherMembersId);
+        List<String> membersId = otherMembersId == null ? new ArrayList<>() : otherMembersId;
         membersId.add(roomOwnerId);
 
         ChatRoom chatRoom = ChatRoom.builder()

@@ -20,8 +20,9 @@ public class PrivateChatMessage {
     @Id
     private String id;
     private String chatRoomId;
-    private String senderId;
-    private String receiverId;
+    private User sender;
+    private User receiver;
     private String content;
+    private String imageUrl;
     private Date timestamp;
 }
