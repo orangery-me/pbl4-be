@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.*;
 
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,6 @@ public class PrivateChatRoomService {
         List<String> sortedIds = Arrays.asList(user1Id, user2Id);
         Collections.sort(sortedIds);
         String roomName = sortedIds.get(0) + "_" + sortedIds.get(1);
-
         PrivateChatRoom chatRoom = PrivateChatRoom.builder()
                 .roomName(roomName)
                 .user1Id(sortedIds.get(0))
@@ -44,12 +44,16 @@ public class PrivateChatRoomService {
 
     public List<PrivateChatRoom> getJoinedRooms(String userId) {
         List<PrivateChatRoom> chatRooms = repository.findAll();
-        List<PrivateChatRoom> joinedRooms = Collections.emptyList();
+        List<PrivateChatRoom> joinedRooms = new ArrayList<>(); 
+    
         for (PrivateChatRoom chatRoom : chatRooms) {
-            if (chatRoom.getUser1Id().equals(userId) || chatRoom.getUser2Id().equals(userId)) {
+            if (chatRoom.getUser1Id().contains(userId) 
+            || chatRoom.getUser2Id().contains(userId)) {
                 joinedRooms.add(chatRoom);
             }
         }
+        
         return joinedRooms;
     }
+    
 }

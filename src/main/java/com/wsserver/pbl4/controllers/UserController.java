@@ -54,4 +54,9 @@ public class UserController {
     public ResponseEntity<List<User>> getUserByEmail(@RequestParam("email") String email) {
         return ResponseEntity.ok(userService.findByEmail(email));
     }
+    @GetMapping("/findById")
+    public ResponseEntity<User> getUserById(@RequestParam("Id") String Id) {
+        return ResponseEntity.ok(userService.findById(Id));
+    }
+    
 }
