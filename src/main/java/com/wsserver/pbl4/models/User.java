@@ -17,11 +17,13 @@ public class User {
     @Id
     private String uid;
     private String fullname;
+    private String photoURL;
     private String email;
     private Status status;
 
     @Override
     public String toString() {
-        return "User [email=" + email + ", fullname=" + fullname + ", status=" + status + ", uid=" + uid + "]";
+        return "User [email=" + email + ", fullname=" + fullname + ", photoURL=" + photoURL + ", status=" + status
+                + ", uid=" + uid + "]";
     }
 }

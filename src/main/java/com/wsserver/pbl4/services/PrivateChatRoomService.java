@@ -44,16 +44,13 @@ public class PrivateChatRoomService {
 
     public List<PrivateChatRoom> getJoinedRooms(String userId) {
         List<PrivateChatRoom> chatRooms = repository.findAll();
-        List<PrivateChatRoom> joinedRooms = new ArrayList<>(); 
-    
+        List<PrivateChatRoom> joinedRooms = new ArrayList<>();
+
         for (PrivateChatRoom chatRoom : chatRooms) {
-            if (chatRoom.getUser1Id().contains(userId) 
-            || chatRoom.getUser2Id().contains(userId)) {
+            if (chatRoom.getUser1Id().equals(userId) || chatRoom.getUser2Id().equals(userId)) {
                 joinedRooms.add(chatRoom);
             }
         }
-        
         return joinedRooms;
     }
-    
 }

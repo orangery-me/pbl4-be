@@ -1,6 +1,8 @@
 package com.wsserver.pbl4.services;
 
 import org.springframework.stereotype.Service;
+
+import com.wsserver.pbl4.DTOs.CreateChatRoomRequest;
 import com.wsserver.pbl4.models.ChatRoom;
 import com.wsserver.pbl4.repositories.ChatRoomRepository;
 import java.util.*;
@@ -11,14 +13,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ChatRoomService {
     private final ChatRoomRepository repository;
+    private final CloudinaryService cloudinaryService;
 
-    public String createChatRoom(String roomName, String roomOwnerId, List<String> otherMembersId) {
-        List<String> membersId = otherMembersId == null ? new ArrayList<>() : otherMembersId;
-        membersId.add(roomOwnerId);
+    public String createChatRoom(CreateChatRoomRequest request) {
+        List<String> membersId = request.getOtherMembersId() == null ? new ArrayList<>() : request.getOtherMembersId();
+        membersId.add(request.getRoomOwnerId());
+        String avatar = cloudinaryService.upload(request.getAvatar());
 
         ChatRoom chatRoom = ChatRoom.builder()
-                .roomName(roomName)
-                .roomOwnerId(roomOwnerId)
+                .roomName(request.getRoomName())
+                .avatar(avatar)
+                .roomOwnerId(request.getRoomOwnerId())
                 .membersId(membersId)
                 .build();
         repository.save(chatRoom);

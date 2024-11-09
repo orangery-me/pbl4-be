@@ -20,6 +20,7 @@ public class ChatRoom {
     @Id
     private String id;
     private String roomName;
+    private String avatar;
     private String roomOwnerId;
     private List<String> membersId;
 }

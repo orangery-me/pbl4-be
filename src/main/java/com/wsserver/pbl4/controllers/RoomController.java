@@ -17,6 +17,8 @@ import com.wsserver.pbl4.services.PrivateChatRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequiredArgsConstructor
@@ -25,9 +27,19 @@ public class RoomController {
     final PrivateChatRoomService pChatRoomService;
 
     @PostMapping("/createChatRoom")
-    public ResponseEntity<String> createChatRoom(@RequestBody CreateChatRoomRequest request) {
-        return ResponseEntity.ok(chatRoomService.createChatRoom(request.getRoomName(), request.getRoomOwnerId(),
-                request.getOtherMembersId()));
+    public ResponseEntity<String> createChatRoom(
+            @RequestParam("roomName") String roomName,
+            @RequestParam("roomOwnerId") String roomOwnerId,
+            @RequestParam("otherMembersId") List<String> otherMembersId,
+            @RequestPart(value = "avatar", required = false) MultipartFile avatar) {
+        CreateChatRoomRequest request = CreateChatRoomRequest.builder()
+                .roomName(roomName)
+                .avatar(avatar)
+                .roomOwnerId(roomOwnerId)
+                .otherMembersId(otherMembersId)
+                .build();
+        return ResponseEntity
+                .ok(chatRoomService.createChatRoom(request));
     }
 
     @PostMapping("/addNewMember")
@@ -42,6 +54,13 @@ public class RoomController {
 
     @GetMapping("/getJoinedPrivateRooms")
     public ResponseEntity<List<PrivateChatRoom>> getJoinedPrivateRooms(@RequestParam("userId") String userId) {
-        return ResponseEntity.ok(pChatRoomService.getJoinedRooms(userId));
+        try {
+            List<PrivateChatRoom> rooms = pChatRoomService.getJoinedRooms(userId);
+            System.out.println("Rooms: " + rooms);
+            return ResponseEntity.ok(rooms);
+        } catch (Exception e) {
+            System.out.println("Loi: " + e);
+            return ResponseEntity.ok(null);
+        }
     }
 }
