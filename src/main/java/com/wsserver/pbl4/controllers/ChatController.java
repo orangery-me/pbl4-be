@@ -83,7 +83,8 @@ public class ChatController {
         message.setSenderId(senderId);
         message.setReceiverId(receiverId);
         message.setContent(content);
-        message.setFile(file);
+        if (file != null)
+            message.setFile(file);
         PrivateChatMessage savedMessage = privateChatMessageService.saveMessage(message);
         processPrivateMessage(savedMessage);
 
@@ -91,22 +92,31 @@ public class ChatController {
     }
 
     public void processPrivateMessage(@Payload PrivateChatMessage message) {
+        ChatNotification noti  = ChatNotification.builder()
+        .chatRoomId(message.getChatRoomId())
+        .senderId(message.getSender().getUid())
+        .receiverId(message.getReceiver().getUid())
+        .notificationType(Notification.MESSAGE)
+        .isRead(false)
+        .content(message.getContent())
+        .timestamp(message.getTimestamp())
+        .build();
+
+        System.out.println("Noti test: " + noti);
 
         // send notification to the queue /user/{uid}/queue/messages
         template.convertAndSendToUser(message.getReceiver().getUid(), "/queue/messages",
-                ChatNotification.builder()
-                        .chatRoomId(message.getChatRoomId())
-                        .senderId(message.getSender().getUid())
-                        .receiverId(message.getReceiver().getUid())
-                        .notificationType(Notification.MESSAGE)
-                        .isRead(false)
-                        .content(message.getContent())
-                        .timestamp(message.getTimestamp())
-                        .build());
+                noti);
     }
 
     @GetMapping("/getMessages/{chatRoomId}")
     public ResponseEntity<List<ChatMessage>> getMessages(@PathVariable("chatRoomId") String chatRoomId) {
         return ResponseEntity.ok(chatMessageService.getMessages(chatRoomId));
     }
+
+    @GetMapping("/getPrivateMessages/{chatRoomId}")
+    public ResponseEntity<List<PrivateChatMessage>> getPrivateMessages(@PathVariable("chatRoomId") String chatRoomId) {
+        return ResponseEntity.ok(privateChatMessageService.getMessages(chatRoomId));
+    }
+    
 }

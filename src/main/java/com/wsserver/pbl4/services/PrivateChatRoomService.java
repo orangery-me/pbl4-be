@@ -23,6 +23,7 @@ public class PrivateChatRoomService {
         Collections.sort(sortedIds);
         String roomName = sortedIds.get(0) + "_" + sortedIds.get(1);
         PrivateChatRoom chatRoom = PrivateChatRoom.builder()
+                .id("pr" + roomName)
                 .roomName(roomName)
                 .user1Id(sortedIds.get(0))
                 .user2Id(sortedIds.get(1))
