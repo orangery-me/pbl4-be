@@ -27,7 +27,7 @@ public class RoomController {
     final PrivateChatRoomService pChatRoomService;
 
     @PostMapping("/createChatRoom")
-    public ResponseEntity<String> createChatRoom(
+    public ResponseEntity<ChatRoom> createChatRoom(
             @RequestParam("roomName") String roomName,
             @RequestParam("roomOwnerId") String roomOwnerId,
             @RequestParam("otherMembersId") List<String> otherMembersId,

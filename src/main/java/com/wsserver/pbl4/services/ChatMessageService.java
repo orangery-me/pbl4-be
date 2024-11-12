@@ -7,13 +7,13 @@ import org.springframework.stereotype.Service;
 import com.wsserver.pbl4.DTOs.ChatMessageRequest;
 import com.wsserver.pbl4.models.ChatMessage;
 import com.wsserver.pbl4.models.User;
-import com.wsserver.pbl4.repositories.ChatMessageRespository;
+import com.wsserver.pbl4.repositories.ChatMessageRepository;
 import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
 public class ChatMessageService {
-    private final ChatMessageRespository repository;
+    private final ChatMessageRepository repository;
     private final CloudinaryService cloudinaryService;
     private final UserService userService;
 
@@ -24,7 +24,9 @@ public class ChatMessageService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        String imageURl = cloudinaryService.upload(message.getFile());
+        String imageURl = "";
+        if (message.getFile() != null)
+            imageURl = cloudinaryService.upload(message.getFile());
         ChatMessage savedMessage = ChatMessage.builder()
                 .chatRoomId(message.getChatRoomId())
                 .sender(sender)

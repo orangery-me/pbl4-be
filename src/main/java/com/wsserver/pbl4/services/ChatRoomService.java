@@ -15,7 +15,7 @@ public class ChatRoomService {
     private final ChatRoomRepository repository;
     private final CloudinaryService cloudinaryService;
 
-    public String createChatRoom(CreateChatRoomRequest request) {
+    public ChatRoom createChatRoom(CreateChatRoomRequest request) {
         List<String> membersId = request.getOtherMembersId() == null ? new ArrayList<>() : request.getOtherMembersId();
         membersId.add(request.getRoomOwnerId());
         String avatar = cloudinaryService.upload(request.getAvatar());
@@ -27,7 +27,7 @@ public class ChatRoomService {
                 .membersId(membersId)
                 .build();
         repository.save(chatRoom);
-        return chatRoom.getId();
+        return chatRoom;
     }
 
     public String addNewMember(String roomId, String newMemberId) {

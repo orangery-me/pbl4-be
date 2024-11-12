@@ -15,11 +15,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.wsserver.pbl4.DTOs.PrivateChatMessageRequest;
 import com.wsserver.pbl4.DTOs.ChatMessageRequest;
+import com.wsserver.pbl4.DTOs.ChatNotificationRequest;
 import com.wsserver.pbl4.models.ChatMessage;
 import com.wsserver.pbl4.models.ChatNotification;
 import com.wsserver.pbl4.models.Notification;
 import com.wsserver.pbl4.models.PrivateChatMessage;
 import com.wsserver.pbl4.services.ChatMessageService;
+import com.wsserver.pbl4.services.ChatNotificationService;
 import com.wsserver.pbl4.services.ChatRoomService;
 import com.wsserver.pbl4.services.PrivateChatMessageService;
 
@@ -32,7 +34,7 @@ public class ChatController {
     private final ChatMessageService chatMessageService;
     private final PrivateChatMessageService privateChatMessageService;
     private final ChatRoomService chatRoomService;
-    // private final UserService userService;
+    private final ChatNotificationService chatNotificationService;
 
     @PostMapping("/sendMessageToRoom")
     public ResponseEntity<ChatMessage> sendMessageToRoom(
@@ -45,7 +47,8 @@ public class ChatController {
         message.setChatRoomId(chatRoomId);
         message.setSenderId(senderId);
         message.setContent(content);
-        message.setFile(file);
+        if (file != null)
+            message.setFile(file);
         ChatMessage savedMessage = chatMessageService.saveMessage(message);
         processMessage(savedMessage);
 
@@ -56,19 +59,18 @@ public class ChatController {
         List<String> membersId = chatRoomService.getAllMembers(message.getChatRoomId());
 
         membersId.forEach(memberId -> {
-            System.out.println("Sending message to " + memberId);
+            ChatNotificationRequest noti = ChatNotificationRequest.builder()
+                    .chatRoomId(message.getChatRoomId())
+                    .senderId(message.getSender().getUid())
+                    .receiverId(memberId)
+                    .notificationType(Notification.MESSAGE)
+                    .isRead(false)
+                    .timestamp(message.getTimestamp())
+                    .build();
 
             // Gửi thông báo cho các thành viên trong phòng
-            template.convertAndSendToUser(memberId, "/queue/messages",
-                    ChatNotification.builder()
-                            .chatRoomId(message.getChatRoomId())
-                            .senderId(message.getSender().getUid())
-                            .receiverId(memberId)
-                            .notificationType(Notification.MESSAGE)
-                            .isRead(false)
-                            .content(message.getContent()) // Nội dung hoặc URL ảnh
-                            .timestamp(message.getTimestamp())
-                            .build());
+            template.convertAndSendToUser(memberId, "/queue/messages", noti);
+            chatNotificationService.createNotification(noti);
         });
     }
 
@@ -92,21 +94,22 @@ public class ChatController {
     }
 
     public void processPrivateMessage(@Payload PrivateChatMessage message) {
-        ChatNotification noti  = ChatNotification.builder()
-        .chatRoomId(message.getChatRoomId())
-        .senderId(message.getSender().getUid())
-        .receiverId(message.getReceiver().getUid())
-        .notificationType(Notification.MESSAGE)
-        .isRead(false)
-        .content(message.getContent())
-        .timestamp(message.getTimestamp())
-        .build();
-
-        System.out.println("Noti test: " + noti);
+        ChatNotificationRequest noti = ChatNotificationRequest.builder()
+                .chatRoomId(message.getChatRoomId())
+                .senderId(message.getSender().getUid())
+                .receiverId(message.getReceiver().getUid())
+                .notificationType(Notification.MESSAGE)
+                .isRead(false)
+                .timestamp(message.getTimestamp())
+                .build();
 
         // send notification to the queue /user/{uid}/queue/messages
         template.convertAndSendToUser(message.getReceiver().getUid(), "/queue/messages",
                 noti);
+        chatNotificationService.createNotification(noti);
+        template.convertAndSendToUser(message.getSender().getUid(), "/queue/messages",
+                noti);
+
     }
 
     @GetMapping("/getMessages/{chatRoomId}")
@@ -118,5 +121,5 @@ public class ChatController {
     public ResponseEntity<List<PrivateChatMessage>> getPrivateMessages(@PathVariable("chatRoomId") String chatRoomId) {
         return ResponseEntity.ok(privateChatMessageService.getMessages(chatRoomId));
     }
-    
+
 }

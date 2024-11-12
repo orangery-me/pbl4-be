@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.wsserver.pbl4.DTOs.PrivateChatMessageRequest;
-import com.wsserver.pbl4.models.ChatMessage;
 import com.wsserver.pbl4.models.PrivateChatMessage;
 import com.wsserver.pbl4.models.User;
 import com.wsserver.pbl4.repositories.PrivateChatMessageRepository;
@@ -48,10 +47,11 @@ public class PrivateChatMessageService {
                 .imageUrl(imageURl)
                 .timestamp(new Date())
                 .build();
-        
+
         repository.save(savedMessage);
         return savedMessage;
     }
+
     public List<PrivateChatMessage> getMessages(String chatRoomId) {
 
         return repository.findByChatRoomId(chatRoomId).orElse(null);

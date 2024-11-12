@@ -21,10 +21,22 @@ public class ChatNotification {
     @Id
     private String notificationId;
     private String chatRoomId;
-    private String senderId;
-    private String receiverId;
-    private String content;
+    private User sender;
+    private User receiver;
     private Date timestamp;
     private Notification notificationType; // e.g., MESSAGE, ROOM_CREATED, etc.
     private boolean isRead;
+
+    @Override
+    public String toString() {
+        return "ChatNotification{" +
+                "notificationId='" + notificationId + '\'' +
+                ", chatRoomId='" + chatRoomId + '\'' +
+                ", sender='" + sender + '\'' +
+                ", receiver='" + receiver + '\'' +
+                ", timestamp=" + timestamp +
+                ", notificationType=" + notificationType +
+                ", isRead=" + isRead +
+                '}';
+    }
 }
