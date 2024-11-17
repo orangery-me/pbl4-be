@@ -29,6 +29,7 @@ public class NotificationController {
     @GetMapping("/markAsRead/{notificationId}")
     public ResponseEntity<String> markAsRead(@PathVariable("notificationId") String notificationId) {
         chatNotificationService.markAsRead(notificationId);
+        System.out.println("Marked as read");
         return ResponseEntity.ok("Marked as read");
     }
 
@@ -36,6 +37,14 @@ public class NotificationController {
     public ResponseEntity<List<ChatNotification>> getNotificationsByRoom(@RequestParam("chatRoomId") String chatRoomId,
             @RequestParam("receiverId") String receiverId) {
         return chatNotificationService.getNotificationsByRoom(chatRoomId, receiverId)
+                .map(result -> ResponseEntity.ok(result))
+                .orElseGet(() -> ResponseEntity.badRequest().body(new ArrayList<>()));
+    }
+
+    @GetMapping("/getLatestNotificationsByChatRoomIdAndUserId/{receiverId}")
+    public ResponseEntity<List<ChatNotification>> getLatestNotificationsByChatRoomIdAndUserId(
+            @PathVariable("receiverId") String receiverId) {
+        return chatNotificationService.getLatestNotificationsByChatRoomIdAndUserId(receiverId)
                 .map(result -> ResponseEntity.ok(result))
                 .orElseGet(() -> ResponseEntity.badRequest().body(new ArrayList<>()));
     }
