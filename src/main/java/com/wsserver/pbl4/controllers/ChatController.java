@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.wsserver.pbl4.DTOs.PrivateChatMessageRequest;
 import com.wsserver.pbl4.DTOs.ChatMessageRequest;
-import com.wsserver.pbl4.DTOs.ChatNotificationRequest;
 import com.wsserver.pbl4.models.ChatMessage;
 import com.wsserver.pbl4.models.ChatNotification;
 import com.wsserver.pbl4.models.Notification;
@@ -24,6 +23,7 @@ import com.wsserver.pbl4.services.ChatMessageService;
 import com.wsserver.pbl4.services.ChatNotificationService;
 import com.wsserver.pbl4.services.ChatRoomService;
 import com.wsserver.pbl4.services.PrivateChatMessageService;
+import com.wsserver.pbl4.services.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,6 +35,7 @@ public class ChatController {
     private final PrivateChatMessageService privateChatMessageService;
     private final ChatRoomService chatRoomService;
     private final ChatNotificationService chatNotificationService;
+    private final UserService userService;
 
     @PostMapping("/sendMessageToRoom")
     public ResponseEntity<ChatMessage> sendMessageToRoom(
@@ -59,14 +60,18 @@ public class ChatController {
         List<String> membersId = chatRoomService.getAllMembers(message.getChatRoomId());
 
         membersId.forEach(memberId -> {
-            ChatNotificationRequest noti = ChatNotificationRequest.builder()
+            ChatNotification noti = ChatNotification.builder()
                     .chatRoomId(message.getChatRoomId())
-                    .senderId(message.getSender().getUid())
-                    .receiverId(memberId)
+                    .sender(message.getSender())
+                    .receiver(userService.findById(memberId))
                     .notificationType(Notification.MESSAGE)
                     .isRead(false)
                     .timestamp(message.getTimestamp())
                     .build();
+
+            if (memberId.equals(message.getSender().getUid())) {
+                noti.setRead(true);
+            }
 
             // Gửi thông báo cho các thành viên trong phòng
             template.convertAndSendToUser(memberId, "/queue/messages", noti);
@@ -94,21 +99,33 @@ public class ChatController {
     }
 
     public void processPrivateMessage(@Payload PrivateChatMessage message) {
-        ChatNotificationRequest noti = ChatNotificationRequest.builder()
+        ChatNotification receiverNoti = ChatNotification.builder()
                 .chatRoomId(message.getChatRoomId())
-                .senderId(message.getSender().getUid())
-                .receiverId(message.getReceiver().getUid())
+                .sender(message.getSender())
+                .receiver(message.getReceiver())
                 .notificationType(Notification.MESSAGE)
                 .isRead(false)
                 .timestamp(message.getTimestamp())
                 .build();
 
+        ChatNotification senderNoti = ChatNotification.builder()
+                .chatRoomId(message.getChatRoomId())
+                .sender(message.getSender())
+                .receiver(message.getReceiver())
+                .notificationType(Notification.MESSAGE)
+                .isRead(true)
+                .timestamp(message.getTimestamp())
+                .build();
+
+        chatNotificationService.createNotification(receiverNoti);
+        chatNotificationService.createNotification(senderNoti);
+
         // send notification to the queue /user/{uid}/queue/messages
         template.convertAndSendToUser(message.getReceiver().getUid(), "/queue/messages",
-                noti);
-        chatNotificationService.createNotification(noti);
+                receiverNoti);
+
         template.convertAndSendToUser(message.getSender().getUid(), "/queue/messages",
-                noti);
+                senderNoti);
 
     }
 

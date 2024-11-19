@@ -35,17 +35,9 @@ public class ChatNotificationService {
         return res;
     }
 
-    public ChatNotification createNotification(ChatNotificationRequest notification) {
-        ChatNotification noti = ChatNotification.builder()
-                .chatRoomId(notification.getChatRoomId())
-                .sender(userService.findById(notification.getSenderId()))
-                .receiver(userService.findById(notification.getReceiverId()))
-                .timestamp(notification.getTimestamp())
-                .notificationType(notification.getNotificationType())
-                .isRead(notification.isRead())
-                .build();
-        repository.save(noti);
-        return noti;
+    public ChatNotification createNotification(ChatNotification notification) {
+        repository.save(notification);
+        return notification;
     }
 
     public void markAsRead(String notificationId) {
@@ -54,6 +46,10 @@ public class ChatNotificationService {
             noti.setRead(true);
             repository.save(noti);
         }
+    }
+
+    public Optional<List<ChatNotification>> getLatestNotificationsByChatRoomIdAndUserId(String receiverId) {
+        return repository.findLatestNotificationsByChatRoomIdAndUserId(receiverId);
     }
 
 }
