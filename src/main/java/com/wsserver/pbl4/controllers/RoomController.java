@@ -11,6 +11,7 @@ import com.wsserver.pbl4.DTOs.AddNewMemberRequest;
 import com.wsserver.pbl4.DTOs.CreateChatRoomRequest;
 import com.wsserver.pbl4.models.ChatRoom;
 import com.wsserver.pbl4.models.PrivateChatRoom;
+import com.wsserver.pbl4.models.User;
 import com.wsserver.pbl4.services.ChatRoomService;
 import com.wsserver.pbl4.services.PrivateChatRoomService;
 
@@ -63,4 +64,13 @@ public class RoomController {
             return ResponseEntity.ok(null);
         }
     }
+    @GetMapping("/findRoomById")
+    public ResponseEntity<ChatRoom> getRoomById(@RequestParam("Id") String Id) {
+        return ResponseEntity.ok(chatRoomService.findById(Id));
+    }
+     @GetMapping("/findPrivateRoomById")
+    public ResponseEntity<PrivateChatRoom> getPrivateRoomById(@RequestParam("Id") String Id) {
+        return ResponseEntity.ok(pChatRoomService.findById(Id));
+    }
+    
 }
