@@ -10,15 +10,19 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.wsserver.pbl4.models.User;
 import com.wsserver.pbl4.services.UserService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @Controller
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://192.168.1.6:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
+@RestController
 public class UserController {
     @Autowired
     private final UserService userService;
@@ -39,7 +43,6 @@ public class UserController {
         return user;
     }
 
-    @CrossOrigin(origins = "http://192.168.1.12:8080")
     @GetMapping("/connectedUsers")
     public ResponseEntity<List<User>> getConnectedUsers() {
         return ResponseEntity.ok(userService.findConnectedUsers());
@@ -49,7 +52,6 @@ public class UserController {
     public ResponseEntity<List<User>> getMethodName(@RequestParam("name") String name) {
         return ResponseEntity.ok(userService.findByFullname(name));
     }
-    @CrossOrigin(origins = "http://192.168.1.12:8080")
     @GetMapping("/findByEmail")
     public ResponseEntity<List<User>> getUserByEmail(@RequestParam("email") String email) {
         return ResponseEntity.ok(userService.findByEmail(email));

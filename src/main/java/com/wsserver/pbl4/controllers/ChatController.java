@@ -6,11 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wsserver.pbl4.DTOs.PrivateChatMessageRequest;
@@ -22,13 +25,18 @@ import com.wsserver.pbl4.models.PrivateChatMessage;
 import com.wsserver.pbl4.services.ChatMessageService;
 import com.wsserver.pbl4.services.ChatNotificationService;
 import com.wsserver.pbl4.services.ChatRoomService;
+import com.wsserver.pbl4.services.CloudinaryService;
 import com.wsserver.pbl4.services.PrivateChatMessageService;
 import com.wsserver.pbl4.services.UserService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://192.168.1.6:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
+@RestController
 public class ChatController {
     private final SimpMessagingTemplate template; // provides methods for sending messages to a user.
     private final ChatMessageService chatMessageService;
@@ -36,7 +44,16 @@ public class ChatController {
     private final ChatRoomService chatRoomService;
     private final ChatNotificationService chatNotificationService;
     private final UserService userService;
+    private final CloudinaryService cloudinaryService;
 
+    @PostMapping("/URLimage")
+    public String URLimage(@RequestPart(value = "file", required = false) MultipartFile file) {
+        
+        String url = cloudinaryService.upload(file);
+        
+        return url;
+    }
+    
     @PostMapping("/sendMessageToRoom")
     public ResponseEntity<ChatMessage> sendMessageToRoom(
             @RequestParam("chatRoomId") String chatRoomId,
@@ -138,5 +155,20 @@ public class ChatController {
     public ResponseEntity<List<PrivateChatMessage>> getPrivateMessages(@PathVariable("chatRoomId") String chatRoomId) {
         return ResponseEntity.ok(privateChatMessageService.getMessages(chatRoomId));
     }
+
+    @PostMapping("/leaveChatRoom/{roomId}")
+    public ResponseEntity<String> leaveChatRoom(
+    @PathVariable("roomId") String roomId,       // Change to @PathVariable
+    @RequestParam("userId") String userId) {     // userId remains a @RequestParam
+
+    try {
+        String message = chatRoomService.leaveChatRoom(roomId, userId);
+        return ResponseEntity.ok(message);
+    } catch (RuntimeException e) {
+        return ResponseEntity.status(400).body(e.getMessage());
+    }
+}
+
+
 
 }

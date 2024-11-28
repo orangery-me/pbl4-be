@@ -8,11 +8,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                // .allowedOrigins("*")
-                .allowedOrigins("http://192.168.1.12:5173")
-        .allowedMethods("*") // Cho phép tất cả các phương thức HTTP (GET, POST, PUT, DELETE, v.v.)
-        .allowedHeaders("*")
-        .allowCredentials(true);
+       registry.addMapping("/**")
+                .allowedOrigins("http://192.168.1.6:5173")  // Thêm URL frontend chính xác
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")  // Thêm tất cả các phương thức HTTP mà bạn sử dụng
+                .allowedHeaders("*")
+                .allowCredentials(true);
+        
     }
 }

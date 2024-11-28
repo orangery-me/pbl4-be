@@ -10,12 +10,18 @@ import com.wsserver.pbl4.models.ChatNotification;
 import com.wsserver.pbl4.services.ChatNotificationService;
 
 import lombok.AllArgsConstructor;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @Controller
 @AllArgsConstructor
+@CrossOrigin(origins = "http://192.168.1.6:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
+@RestController
 public class NotificationController {
     private final ChatNotificationService chatNotificationService;
 

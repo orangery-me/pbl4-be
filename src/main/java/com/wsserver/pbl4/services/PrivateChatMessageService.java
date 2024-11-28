@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.wsserver.pbl4.DTOs.PrivateChatMessageRequest;
 import com.wsserver.pbl4.models.PrivateChatMessage;
@@ -20,6 +21,7 @@ public class PrivateChatMessageService {
     private UserService userService;
     private CloudinaryService cloudinaryService;
 
+   
     public PrivateChatMessage saveMessage(PrivateChatMessageRequest message) {
         User sender = null;
         User receiver = null;
@@ -56,4 +58,5 @@ public class PrivateChatMessageService {
 
         return repository.findByChatRoomId(chatRoomId).orElse(null);
     }
+
 }

@@ -6,23 +6,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.wsserver.pbl4.DTOs.AddNewMemberRequest;
 import com.wsserver.pbl4.DTOs.CreateChatRoomRequest;
 import com.wsserver.pbl4.models.ChatRoom;
 import com.wsserver.pbl4.models.PrivateChatRoom;
-import com.wsserver.pbl4.models.User;
 import com.wsserver.pbl4.services.ChatRoomService;
 import com.wsserver.pbl4.services.PrivateChatRoomService;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://192.168.1.6:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
+@RestController
 public class RoomController {
     final ChatRoomService chatRoomService;
     final PrivateChatRoomService pChatRoomService;

@@ -55,8 +55,37 @@ public class ChatRoomService {
         ChatRoom chatRoom = repository.findById(roomId).orElseThrow(() -> new RuntimeException("Chat room not found"));
         return chatRoom.getMembersId();
     }
+
     public ChatRoom findById(String id) {
         ChatRoom chatRoom = repository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         return chatRoom;
     }
+    
+    public String leaveChatRoom(String roomId, String userId) {
+    ChatRoom chatRoom = repository.findById(roomId)
+            .orElseThrow(() -> new RuntimeException("Chat room not found"));
+
+    List<String> membersId = chatRoom.getMembersId();
+
+    if (!membersId.contains(userId)) {
+        throw new RuntimeException("User is not a member of this chat room");
+    }
+
+    membersId.remove(userId);
+    
+    if (chatRoom.getRoomOwnerId().equals(userId)) {
+        if (membersId.isEmpty()) {
+            repository.delete(chatRoom);
+            return "Chat room deleted as the owner left and no members remain";
+        } else {
+            chatRoom.setRoomOwnerId(membersId.get(0));
+        }
+    }
+
+    chatRoom.setMembersId(membersId);
+    repository.save(chatRoom);
+
+    return "User has left the chat room";
+}
+
 }
