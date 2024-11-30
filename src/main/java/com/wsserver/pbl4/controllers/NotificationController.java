@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Controller
 @AllArgsConstructor
-@CrossOrigin(origins = "http://192.168.1.6:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
+@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
 @RestController
 public class NotificationController {
     private final ChatNotificationService chatNotificationService;
