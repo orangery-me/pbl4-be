@@ -87,5 +87,4 @@ public class ChatRoomService {
 
     return "User has left the chat room";
 }
-
 }

@@ -20,6 +20,7 @@ public class ChatNotificationRequest {
     private String senderId;
     private String receiverId;
     private Date timestamp;
+    private String message;
     private Notification notificationType; // e.g., MESSAGE, ROOM_CREATED, etc.
     private boolean isRead;
 }

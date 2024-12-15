@@ -27,9 +27,11 @@ public class NotificationController {
 
     @GetMapping("/getNotifications/{userId}")
     public ResponseEntity<List<ChatNotification>> getNotifications(@PathVariable("userId") String userId) {
-        return chatNotificationService.getNotificationsByUser(userId)
-                .map(result -> ResponseEntity.ok(result))
-                .orElseGet(() -> ResponseEntity.badRequest().body(new ArrayList<>()));
+        List<ChatNotification> noti = chatNotificationService.getNotificationsByUser(userId).orElse(new ArrayList<>());
+        System.out.println("noti nek: "+noti);
+        return ResponseEntity.ok(noti);
+                //.map(result -> ResponseEntity.ok(result));
+//                .orElseGet(() -> ResponseEntity.badRequest().body(new ArrayList<>()));
     }
 
     @GetMapping("/markAsRead/{notificationId}")

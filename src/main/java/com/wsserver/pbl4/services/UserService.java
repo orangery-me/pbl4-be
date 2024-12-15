@@ -51,4 +51,14 @@ public class UserService {
         User user = repository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         return user;
     }
+    public User updateUser(User user) {
+        User existingUser = repository.findById(user.getUid()).orElseThrow(() -> new RuntimeException("User not found"));
+
+        existingUser.setFullname(user.getFullname());
+        existingUser.setEmail(user.getEmail());
+        existingUser.setPhotoURL(user.getPhotoURL());
+
+        return repository.save(existingUser);
+    }
+
 }

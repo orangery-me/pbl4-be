@@ -77,5 +77,5 @@ public class RoomController {
     public ResponseEntity<PrivateChatRoom> getPrivateRoomById(@RequestParam("Id") String Id) {
         return ResponseEntity.ok(pChatRoomService.findById(Id));
     }
-    
+
 }

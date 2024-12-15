@@ -2,6 +2,7 @@ package com.wsserver.pbl4.controllers;
 
 import java.util.List;
 
+import com.wsserver.pbl4.models.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -18,10 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.wsserver.pbl4.DTOs.PrivateChatMessageRequest;
 import com.wsserver.pbl4.DTOs.ChatMessageRequest;
-import com.wsserver.pbl4.models.ChatMessage;
-import com.wsserver.pbl4.models.ChatNotification;
-import com.wsserver.pbl4.models.Notification;
-import com.wsserver.pbl4.models.PrivateChatMessage;
 import com.wsserver.pbl4.services.ChatMessageService;
 import com.wsserver.pbl4.services.ChatNotificationService;
 import com.wsserver.pbl4.services.ChatRoomService;
@@ -95,7 +92,50 @@ public class ChatController {
             chatNotificationService.createNotification(noti);
         });
     }
+    public void processMessageNoti(@Payload ChatMessage message) {
+        List<String> membersId = chatRoomService.getAllMembers(message.getChatRoomId());
 
+        membersId.forEach(memberId -> {
+            ChatNotification noti = ChatNotification.builder()
+                    .chatRoomId(message.getChatRoomId())
+                    .sender(message.getSender())
+                    .receiver(userService.findById(memberId))
+                    .notificationType(Notification.MEMBER_REMOVED)
+                    .isRead(false)
+                    .timestamp(message.getTimestamp())
+                    .build();
+
+            if (memberId.equals(message.getSender().getUid())) {
+                noti.setRead(true);
+            }
+
+            // Gửi thông báo cho các thành viên trong phòng
+            template.convertAndSendToUser(memberId, "/queue/messages", noti);
+            chatNotificationService.createNotification(noti);
+        });
+    }
+    public void processMessageNotiAddRoom(@Payload ChatMessage message) {
+        List<String> membersId = chatRoomService.getAllMembers(message.getChatRoomId());
+
+        membersId.forEach(memberId -> {
+            ChatNotification noti = ChatNotification.builder()
+                    .chatRoomId(message.getChatRoomId())
+                    .sender(message.getSender()) // người được thêm vô nhóm
+                    .receiver(userService.findById(memberId)) // người nhận noti
+                    .notificationType(Notification.MEMBER_ADDED)
+                    .isRead(false)
+                    .timestamp(message.getTimestamp())
+                    .build();
+
+//            if (memberId.equals(message.getSender().getUid())) {
+//                noti.setRead(true);
+//            }
+
+            // Gửi thông báo cho các thành viên trong phòng
+            template.convertAndSendToUser(memberId, "/queue/messages", noti);
+            chatNotificationService.createNotification(noti);
+        });
+    }
     @PostMapping("/sendMessageToUser")
     public ResponseEntity<PrivateChatMessage> sendMessageToUser(
             @RequestParam("senderId") String senderId,
@@ -158,17 +198,45 @@ public class ChatController {
 
     @PostMapping("/leaveChatRoom/{roomId}")
     public ResponseEntity<String> leaveChatRoom(
-    @PathVariable("roomId") String roomId,       // Change to @PathVariable
-    @RequestParam("userId") String userId) {     // userId remains a @RequestParam
-
+    @PathVariable("roomId") String roomId,
+    @RequestParam("userId") String userId) {
+    User user = userService.findById(userId);
+    String mes = user.getFullname() + " da roi nhom";
     try {
+        ChatMessageRequest chatMessage = new ChatMessageRequest();
+        chatMessage.setChatRoomId(roomId);
+        chatMessage.setSenderId(user.getUid());
+        chatMessage.setContent(mes);
+        ChatMessage chatMessage1 = chatMessageService.saveMessage(chatMessage);
+        processMessageNoti(chatMessage1);
+
         String message = chatRoomService.leaveChatRoom(roomId, userId);
         return ResponseEntity.ok(message);
+
     } catch (RuntimeException e) {
         return ResponseEntity.status(400).body(e.getMessage());
     }
 }
 
+    @PostMapping("/addMemberChatRoom/{roomId}")
+    public ResponseEntity<String> addMemberChatRoom(
+            @PathVariable("roomId") String roomId,
+            @RequestParam("userId") String userId) {
+        User user = userService.findById(userId);
+        String mes = user.getFullname() + " da them vao nhom";
+        try {
+            ChatMessageRequest chatMessage = new ChatMessageRequest();
+            chatMessage.setChatRoomId(roomId);
+            chatMessage.setSenderId(user.getUid());
+            chatMessage.setContent(mes);
+            ChatMessage chatMessage1 = chatMessageService.saveMessage(chatMessage);
+            processMessageNotiAddRoom(chatMessage1);
 
+            String message = chatRoomService.addNewMember(roomId, userId);
+            return ResponseEntity.ok(message);
 
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
 }
