@@ -39,24 +39,28 @@ public class UserController {
         return user;
     }
 
-    @CrossOrigin(origins = "http://192.168.1.12:8080")
+    @CrossOrigin(origins = "http://172.20.1.74:8080")
     @GetMapping("/connectedUsers")
     public ResponseEntity<List<User>> getConnectedUsers() {
         return ResponseEntity.ok(userService.findConnectedUsers());
     }
 
+    @CrossOrigin(origins = "http://172.20.1.74:8080")
     @GetMapping("/findByFullname")
     public ResponseEntity<List<User>> getMethodName(@RequestParam("name") String name) {
         return ResponseEntity.ok(userService.findByFullname(name));
     }
-    @CrossOrigin(origins = "http://192.168.1.12:8080")
+
+    @CrossOrigin(origins = "http://172.20.1.74:8080")
     @GetMapping("/findByEmail")
     public ResponseEntity<List<User>> getUserByEmail(@RequestParam("email") String email) {
         return ResponseEntity.ok(userService.findByEmail(email));
     }
+
+    @CrossOrigin(origins = "http://172.20.1.74:8080")
     @GetMapping("/findById")
     public ResponseEntity<User> getUserById(@RequestParam("Id") String Id) {
         return ResponseEntity.ok(userService.findById(Id));
     }
-    
+
 }

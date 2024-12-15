@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 
 import com.wsserver.pbl4.DTOs.CreateChatRoomRequest;
 import com.wsserver.pbl4.models.ChatRoom;
-import com.wsserver.pbl4.models.User;
 import com.wsserver.pbl4.repositories.ChatRoomRepository;
 import java.util.*;
 
@@ -55,6 +54,7 @@ public class ChatRoomService {
         ChatRoom chatRoom = repository.findById(roomId).orElseThrow(() -> new RuntimeException("Chat room not found"));
         return chatRoom.getMembersId();
     }
+
     public ChatRoom findById(String id) {
         ChatRoom chatRoom = repository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         return chatRoom;

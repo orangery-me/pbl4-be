@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 import com.wsserver.pbl4.DTOs.PrivateChatMessageRequest;
 import com.wsserver.pbl4.DTOs.ChatMessageRequest;
 import com.wsserver.pbl4.models.ChatMessage;
@@ -37,6 +37,7 @@ public class ChatController {
     private final ChatNotificationService chatNotificationService;
     private final UserService userService;
 
+    @CrossOrigin(origins = "http://172.20.1.74:8080")
     @PostMapping("/sendMessageToRoom")
     public ResponseEntity<ChatMessage> sendMessageToRoom(
             @RequestParam("chatRoomId") String chatRoomId,
@@ -79,6 +80,7 @@ public class ChatController {
         });
     }
 
+    @CrossOrigin(origins = "http://172.20.1.74:8080")
     @PostMapping("/sendMessageToUser")
     public ResponseEntity<PrivateChatMessage> sendMessageToUser(
             @RequestParam("senderId") String senderId,
@@ -129,11 +131,13 @@ public class ChatController {
 
     }
 
+    @CrossOrigin(origins = "http://172.20.1.74:8080")
     @GetMapping("/getMessages/{chatRoomId}")
     public ResponseEntity<List<ChatMessage>> getMessages(@PathVariable("chatRoomId") String chatRoomId) {
         return ResponseEntity.ok(chatMessageService.getMessages(chatRoomId));
     }
 
+    @CrossOrigin(origins = "http://172.20.1.74:8080")
     @GetMapping("/getPrivateMessages/{chatRoomId}")
     public ResponseEntity<List<PrivateChatMessage>> getPrivateMessages(@PathVariable("chatRoomId") String chatRoomId) {
         return ResponseEntity.ok(privateChatMessageService.getMessages(chatRoomId));

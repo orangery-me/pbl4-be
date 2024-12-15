@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 
 import com.wsserver.pbl4.models.ChatNotification;
 import com.wsserver.pbl4.services.ChatNotificationService;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class NotificationController {
     private final ChatNotificationService chatNotificationService;
 
+    @CrossOrigin(origins = "http://172.20.1.74:8080")
     @GetMapping("/getNotifications/{userId}")
     public ResponseEntity<List<ChatNotification>> getNotifications(@PathVariable("userId") String userId) {
         return chatNotificationService.getNotificationsByUser(userId)
@@ -26,6 +27,7 @@ public class NotificationController {
                 .orElseGet(() -> ResponseEntity.badRequest().body(new ArrayList<>()));
     }
 
+    @CrossOrigin(origins = "http://172.20.1.74:8080")
     @GetMapping("/markAsRead/{notificationId}")
     public ResponseEntity<String> markAsRead(@PathVariable("notificationId") String notificationId) {
         chatNotificationService.markAsRead(notificationId);
@@ -33,6 +35,7 @@ public class NotificationController {
         return ResponseEntity.ok("Marked as read");
     }
 
+    @CrossOrigin(origins = "http://172.20.1.74:8080")
     @GetMapping("/getNotificationsByRoom")
     public ResponseEntity<List<ChatNotification>> getNotificationsByRoom(@RequestParam("chatRoomId") String chatRoomId,
             @RequestParam("receiverId") String receiverId) {
@@ -41,6 +44,7 @@ public class NotificationController {
                 .orElseGet(() -> ResponseEntity.badRequest().body(new ArrayList<>()));
     }
 
+    @CrossOrigin(origins = "http://172.20.1.74:8080")
     @GetMapping("/getLatestNotificationsByChatRoomIdAndUserId/{receiverId}")
     public ResponseEntity<List<ChatNotification>> getLatestNotificationsByChatRoomIdAndUserId(
             @PathVariable("receiverId") String receiverId) {
