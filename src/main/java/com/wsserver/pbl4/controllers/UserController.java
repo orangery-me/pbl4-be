@@ -48,6 +48,7 @@ public class UserController {
     public ResponseEntity<List<User>> getMethodName(@RequestParam("name") String name) {
         return ResponseEntity.ok(userService.findByFullname(name));
     }
+
     @GetMapping("/findByEmail")
     public ResponseEntity<List<User>> getUserByEmail(@RequestParam("email") String email) {
         return ResponseEntity.ok(userService.findByEmail(email));
@@ -61,5 +62,5 @@ public class UserController {
         User updatedUser = userService.updateUser(user);
         return ResponseEntity.ok(updatedUser);
     }
-    
+
 }

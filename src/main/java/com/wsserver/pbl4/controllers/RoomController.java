@@ -14,6 +14,7 @@ import com.wsserver.pbl4.models.ChatRoom;
 import com.wsserver.pbl4.models.PrivateChatRoom;
 import com.wsserver.pbl4.services.ChatRoomService;
 import com.wsserver.pbl4.services.PrivateChatRoomService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,6 +33,7 @@ public class RoomController {
     final ChatRoomService chatRoomService;
     final PrivateChatRoomService pChatRoomService;
 
+    @CrossOrigin(origins = "http://172.20.1.74:8080")
     @PostMapping("/createChatRoom")
     public ResponseEntity<ChatRoom> createChatRoom(
             @RequestParam("roomName") String roomName,
@@ -48,32 +50,37 @@ public class RoomController {
                 .ok(chatRoomService.createChatRoom(request));
     }
 
+    @CrossOrigin(origins = "http://172.20.1.74:8080")
     @PostMapping("/addNewMember")
     public ResponseEntity<String> addNewMember(@RequestBody AddNewMemberRequest request) {
         return ResponseEntity.ok(chatRoomService.addNewMember(request.getRoomId(), request.getNewMemberId()));
     }
 
+    @CrossOrigin(origins = "http://172.20.1.74:8080")
     @GetMapping("/getJoinedRooms")
     public ResponseEntity<List<ChatRoom>> getJoinedRooms(@RequestParam("userId") String userId) {
         return ResponseEntity.ok(chatRoomService.getJoinedRooms(userId));
     }
 
+    @CrossOrigin(origins = "http://172.20.1.74:8080")
     @GetMapping("/getJoinedPrivateRooms")
     public ResponseEntity<List<PrivateChatRoom>> getJoinedPrivateRooms(@RequestParam("userId") String userId) {
         try {
             List<PrivateChatRoom> rooms = pChatRoomService.getJoinedRooms(userId);
-            System.out.println("Rooms: " + rooms);
             return ResponseEntity.ok(rooms);
         } catch (Exception e) {
-            System.out.println("Loi: " + e);
             return ResponseEntity.ok(null);
         }
     }
+
+    @CrossOrigin(origins = "http://172.20.1.74:8080")
     @GetMapping("/findRoomById")
     public ResponseEntity<ChatRoom> getRoomById(@RequestParam("Id") String Id) {
         return ResponseEntity.ok(chatRoomService.findById(Id));
     }
-     @GetMapping("/findPrivateRoomById")
+
+    @CrossOrigin(origins = "http://172.20.1.74:8080")
+    @GetMapping("/findPrivateRoomById")
     public ResponseEntity<PrivateChatRoom> getPrivateRoomById(@RequestParam("Id") String Id) {
         return ResponseEntity.ok(pChatRoomService.findById(Id));
     }

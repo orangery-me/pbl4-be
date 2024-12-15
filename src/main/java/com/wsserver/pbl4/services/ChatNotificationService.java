@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-
-import com.wsserver.pbl4.DTOs.ChatNotificationRequest;
 import com.wsserver.pbl4.models.ChatNotification;
 import com.wsserver.pbl4.repositories.ChatNotificationRepository;
 
@@ -15,7 +13,6 @@ import lombok.AllArgsConstructor;
 @Service
 public class ChatNotificationService {
     private final ChatNotificationRepository repository;
-    private final UserService userService;
 
     public Optional<List<ChatNotification>> getNotificationsByUser(String receiverId) {
         return repository.findByReceiverUidAndIsReadFalse(receiverId);

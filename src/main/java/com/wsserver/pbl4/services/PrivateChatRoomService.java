@@ -3,8 +3,6 @@ package com.wsserver.pbl4.services;
 import java.util.*;
 
 import org.springframework.stereotype.Service;
-
-import com.wsserver.pbl4.models.ChatRoom;
 import com.wsserver.pbl4.models.PrivateChatRoom;
 import com.wsserver.pbl4.repositories.PrivateChatRoomRepository;
 
@@ -53,11 +51,11 @@ public class PrivateChatRoomService {
     }
 
     public PrivateChatRoom findById(String id) {
-        try{
+        try {
             PrivateChatRoom chatRoom = repository.findById(id).orElse(null);
             return chatRoom;
         } catch (Exception e) {
-            System.out.println("llllll" +e.getLocalizedMessage());
+            System.out.println("llllll" + e.getLocalizedMessage());
         }
         return null;
     }

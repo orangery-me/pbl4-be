@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 
 import com.wsserver.pbl4.DTOs.CreateChatRoomRequest;
 import com.wsserver.pbl4.models.ChatRoom;
-import com.wsserver.pbl4.models.User;
 import com.wsserver.pbl4.repositories.ChatRoomRepository;
 import java.util.*;
 

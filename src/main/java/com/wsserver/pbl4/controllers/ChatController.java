@@ -19,6 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.wsserver.pbl4.DTOs.PrivateChatMessageRequest;
 import com.wsserver.pbl4.DTOs.ChatMessageRequest;
+import com.wsserver.pbl4.models.ChatMessage;
+import com.wsserver.pbl4.models.ChatNotification;
+import com.wsserver.pbl4.models.Notification;
+import com.wsserver.pbl4.models.PrivateChatMessage;
 import com.wsserver.pbl4.services.ChatMessageService;
 import com.wsserver.pbl4.services.ChatNotificationService;
 import com.wsserver.pbl4.services.ChatRoomService;
@@ -45,12 +49,12 @@ public class ChatController {
 
     @PostMapping("/URLimage")
     public String URLimage(@RequestPart(value = "file", required = false) MultipartFile file) {
-        
+
         String url = cloudinaryService.upload(file);
-        
+
         return url;
     }
-    
+
     @PostMapping("/sendMessageToRoom")
     public ResponseEntity<ChatMessage> sendMessageToRoom(
             @RequestParam("chatRoomId") String chatRoomId,
