@@ -27,13 +27,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
-@RestController
+//@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
+//@RestController
 public class RoomController {
     final ChatRoomService chatRoomService;
     final PrivateChatRoomService pChatRoomService;
-
-    @CrossOrigin(origins = "http://172.20.1.74:8080")
+    @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
     @PostMapping("/createChatRoom")
     public ResponseEntity<ChatRoom> createChatRoom(
             @RequestParam("roomName") String roomName,
@@ -49,20 +48,17 @@ public class RoomController {
         return ResponseEntity
                 .ok(chatRoomService.createChatRoom(request));
     }
-
-    @CrossOrigin(origins = "http://172.20.1.74:8080")
+    @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
     @PostMapping("/addNewMember")
     public ResponseEntity<String> addNewMember(@RequestBody AddNewMemberRequest request) {
         return ResponseEntity.ok(chatRoomService.addNewMember(request.getRoomId(), request.getNewMemberId()));
     }
-
-    @CrossOrigin(origins = "http://172.20.1.74:8080")
+    @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
     @GetMapping("/getJoinedRooms")
     public ResponseEntity<List<ChatRoom>> getJoinedRooms(@RequestParam("userId") String userId) {
         return ResponseEntity.ok(chatRoomService.getJoinedRooms(userId));
     }
-
-    @CrossOrigin(origins = "http://172.20.1.74:8080")
+    @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
     @GetMapping("/getJoinedPrivateRooms")
     public ResponseEntity<List<PrivateChatRoom>> getJoinedPrivateRooms(@RequestParam("userId") String userId) {
         try {
@@ -72,14 +68,12 @@ public class RoomController {
             return ResponseEntity.ok(null);
         }
     }
-
-    @CrossOrigin(origins = "http://172.20.1.74:8080")
+    @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
     @GetMapping("/findRoomById")
     public ResponseEntity<ChatRoom> getRoomById(@RequestParam("Id") String Id) {
         return ResponseEntity.ok(chatRoomService.findById(Id));
     }
-
-    @CrossOrigin(origins = "http://172.20.1.74:8080")
+    @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
     @GetMapping("/findPrivateRoomById")
     public ResponseEntity<PrivateChatRoom> getPrivateRoomById(@RequestParam("Id") String Id) {
         return ResponseEntity.ok(pChatRoomService.findById(Id));

@@ -17,8 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
-@RestController
+//@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
 public class UserController {
     @Autowired
     private final UserService userService;
@@ -39,24 +38,31 @@ public class UserController {
         return user;
     }
 
+    @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
     @GetMapping("/connectedUsers")
     public ResponseEntity<List<User>> getConnectedUsers() {
         return ResponseEntity.ok(userService.findConnectedUsers());
     }
 
+    @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
     @GetMapping("/findByFullname")
     public ResponseEntity<List<User>> getMethodName(@RequestParam("name") String name) {
         return ResponseEntity.ok(userService.findByFullname(name));
     }
 
+    @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
     @GetMapping("/findByEmail")
     public ResponseEntity<List<User>> getUserByEmail(@RequestParam("email") String email) {
         return ResponseEntity.ok(userService.findByEmail(email));
     }
+
+    @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
     @GetMapping("/findById")
     public ResponseEntity<User> getUserById(@RequestParam("Id") String Id) {
         return ResponseEntity.ok(userService.findById(Id));
     }
+
+    @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
     @PutMapping("/updateUser")
     public ResponseEntity<User> updateUser(@RequestBody User user) {
         User updatedUser = userService.updateUser(user);

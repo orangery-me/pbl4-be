@@ -36,8 +36,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
-@RestController
+//@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
+//@RestController
 public class ChatController {
     private final SimpMessagingTemplate template; // provides methods for sending messages to a user.
     private final ChatMessageService chatMessageService;
@@ -47,6 +47,7 @@ public class ChatController {
     private final UserService userService;
     private final CloudinaryService cloudinaryService;
 
+    @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
     @PostMapping("/URLimage")
     public String URLimage(@RequestPart(value = "file", required = false) MultipartFile file) {
 
@@ -55,6 +56,7 @@ public class ChatController {
         return url;
     }
 
+    @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
     @PostMapping("/sendMessageToRoom")
     public ResponseEntity<ChatMessage> sendMessageToRoom(
             @RequestParam("chatRoomId") String chatRoomId,
@@ -140,6 +142,7 @@ public class ChatController {
             chatNotificationService.createNotification(noti);
         });
     }
+    @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
     @PostMapping("/sendMessageToUser")
     public ResponseEntity<PrivateChatMessage> sendMessageToUser(
             @RequestParam("senderId") String senderId,
@@ -189,17 +192,18 @@ public class ChatController {
                 senderNoti);
 
     }
-
+    @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
     @GetMapping("/getMessages/{chatRoomId}")
     public ResponseEntity<List<ChatMessage>> getMessages(@PathVariable("chatRoomId") String chatRoomId) {
         return ResponseEntity.ok(chatMessageService.getMessages(chatRoomId));
     }
-
+    @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
     @GetMapping("/getPrivateMessages/{chatRoomId}")
     public ResponseEntity<List<PrivateChatMessage>> getPrivateMessages(@PathVariable("chatRoomId") String chatRoomId) {
         return ResponseEntity.ok(privateChatMessageService.getMessages(chatRoomId));
     }
 
+    @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
     @PostMapping("/leaveChatRoom/{roomId}")
     public ResponseEntity<String> leaveChatRoom(
     @PathVariable("roomId") String roomId,
@@ -222,6 +226,7 @@ public class ChatController {
     }
 }
 
+@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
     @PostMapping("/addMemberChatRoom/{roomId}")
     public ResponseEntity<String> addMemberChatRoom(
             @PathVariable("roomId") String roomId,
